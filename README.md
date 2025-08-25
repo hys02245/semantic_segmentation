@@ -55,7 +55,7 @@ conda create -n semantic_segmentation python=3.10 -y
 conda activate semantic_segmentation
 
 # 安裝 torch
-conda install pytorch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 pytorch-cuda=11.8 -c pytorch -c nvidia -y
+conda install pytorch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 pytorch-cuda=11.8 -c pytorch -c nvidia -y
 
 # 安裝 cuda-toolkit
 conda install -c "nvidia/label/cuda-11.8.0" cuda-toolkit
