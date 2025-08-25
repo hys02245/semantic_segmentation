@@ -171,13 +171,13 @@ def main():
             
             # 視覺化與儲存
             color_mask = draw_segmentation_map(segmentation_map, COLOR_PALETTE)
-            overlay_image = overlay_segmentation(original_image, color_mask)
+            # overlay_image = overlay_segmentation(original_image, color_mask)
             raw_mask_image = Image.fromarray(segmentation_map.astype(np.uint8))
 
             base_filename = os.path.splitext(os.path.basename(image_path))[0]
             raw_mask_image.save(os.path.join(args.output_dir, f"{base_filename}_raw_mask.png"))
             color_mask.save(os.path.join(args.output_dir, f"{base_filename}_color_mask.png"))
-            overlay_image.save(os.path.join(args.output_dir, f"{base_filename}_overlay.jpg"))
+            # overlay_image.save(os.path.join(args.output_dir, f"{base_filename}_overlay.jpg"))
 
         except Exception as e:
             print(f"\n處理圖片 {image_path} 時發生錯誤: {e}")

@@ -190,7 +190,7 @@ def main():
     label2id = {v: k for k, v in ID2LABEL.items()}
     num_classes = len(ID2LABEL)
 
-    image_processor = SegformerImageProcessor.from_pretrained(PRETRAINED_MODEL, reduce_labels=True)
+    image_processor = SegformerImageProcessor.from_pretrained(PRETRAINED_MODEL, reduce_labels=False)
     
     model = SegformerForSemanticSegmentation.from_pretrained(
         PRETRAINED_MODEL,
