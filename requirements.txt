@@ -1,0 +1,10 @@
+transformers==4.35.2
+datasets==2.15.0
+Pillow==10.1.0
+accelerate==0.25.0
+evaluate==0.4.1
+numpy==1.26.2
+tqdm
+onnx
+onnxruntime
+matplotlib==3.8.2
