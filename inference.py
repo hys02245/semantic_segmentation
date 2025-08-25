@@ -150,11 +150,18 @@ def main():
         return
 
     # --- 準備輸入和輸出路徑 ---
-    os.makedirs(args.output_dir, exist_ok=True)
+    # 創建兩個輸出資料夾
+    semantic_colors_dir = os.path.join(args.output_dir, "semantic_colors")
+    semantic_ids_dir = os.path.join(args.output_dir, "semantic_ids")
+    os.makedirs(semantic_colors_dir, exist_ok=True)
+    os.makedirs(semantic_ids_dir, exist_ok=True)
+    
     if os.path.isfile(args.input_path):
         image_paths = [args.input_path]
     elif os.path.isdir(args.input_path):
         image_paths = [os.path.join(args.input_path, f) for f in os.listdir(args.input_path) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        # 對圖片路徑進行排序，確保順序一致
+        image_paths.sort()
     else:
         print(f"錯誤: 輸入路徑 {args.input_path} 不存在或無效。")
         return
@@ -162,7 +169,7 @@ def main():
     print(f"找到 {len(image_paths)} 張圖片，開始進行推理...")
     
     # --- 處理每張圖片 ---
-    for image_path in tqdm(image_paths, desc="推理進度"):
+    for idx, image_path in enumerate(tqdm(image_paths, desc="推理進度")):
         try:
             original_image = Image.open(image_path).convert("RGB")
             
@@ -171,18 +178,24 @@ def main():
             
             # 視覺化與儲存
             color_mask = draw_segmentation_map(segmentation_map, COLOR_PALETTE)
-            # overlay_image = overlay_segmentation(original_image, color_mask)
             raw_mask_image = Image.fromarray(segmentation_map.astype(np.uint8))
 
-            base_filename = os.path.splitext(os.path.basename(image_path))[0]
-            raw_mask_image.save(os.path.join(args.output_dir, f"{base_filename}_raw_mask.png"))
-            color_mask.save(os.path.join(args.output_dir, f"{base_filename}_color_mask.png"))
-            # overlay_image.save(os.path.join(args.output_dir, f"{base_filename}_overlay.jpg"))
+            # 使用索引生成檔名，格式為 000000, 000001, 000002...
+            filename_index = f"{idx:06d}"
+            
+            # 保存到指定的資料夾，使用指定的命名格式
+            color_filename = f"semantic_color{filename_index}.png"
+            id_filename = f"semantic_id{filename_index}.png"
+            
+            color_mask.save(os.path.join(semantic_colors_dir, color_filename))
+            raw_mask_image.save(os.path.join(semantic_ids_dir, id_filename))
 
         except Exception as e:
             print(f"\n處理圖片 {image_path} 時發生錯誤: {e}")
 
-    print(f"\n🎉 推理完成！所有結果已保存至: {args.output_dir}")
+    print(f"\n🎉 推理完成！")
+    print(f"彩色分割遮罩已保存至: {semantic_colors_dir}")
+    print(f"ID分割遮罩已保存至: {semantic_ids_dir}")
 
 if __name__ == "__main__":
     main()
